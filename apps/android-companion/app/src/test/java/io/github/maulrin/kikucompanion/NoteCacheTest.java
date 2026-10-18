@@ -124,8 +124,8 @@ public class NoteCacheTest {
         FakeMedia media = new FakeMedia();
         String previous = manifest("_kiku_notes_0.json.gz").toString();
         CachePublisher publisher = publisher();
-        Files.writeString(publisher.journal.toPath(), new JSONObject().put("folder", "correct")
-            .put("previous", previous).put("next", manifest("_kiku_notes_1.json.gz").toString()).toString());
+        Files.write(publisher.journal.toPath(), new JSONObject().put("folder", "correct")
+            .put("previous", previous).put("next", manifest("_kiku_notes_1.json.gz").toString()).toString().getBytes(StandardCharsets.UTF_8));
         media.write(NoteCache.MANIFEST, "{truncated".getBytes(StandardCharsets.UTF_8));
         assertThrows(IOException.class, () -> publisher.recover(media, "wrong"));
         assertTrue(publisher.journal.exists());
@@ -139,8 +139,8 @@ public class NoteCacheTest {
         CachePublisher publisher = publisher();
         String newer = manifest("_kiku_notes_9.json.gz").toString();
         media.write(NoteCache.MANIFEST, newer.getBytes(StandardCharsets.UTF_8));
-        Files.writeString(publisher.journal.toPath(), new JSONObject().put("folder", "folder")
-            .put("previous", manifest("_kiku_notes_0.json.gz").toString()).put("next", "unused").toString());
+        Files.write(publisher.journal.toPath(), new JSONObject().put("folder", "folder")
+            .put("previous", manifest("_kiku_notes_0.json.gz").toString()).put("next", "unused").toString().getBytes(StandardCharsets.UTF_8));
         publisher.recover(media, "folder");
         assertEquals(newer, media.text(NoteCache.MANIFEST));
     }
