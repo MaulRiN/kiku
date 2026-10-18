@@ -99,10 +99,11 @@ public final class MainActivity extends Activity {
         super.onActivityResult(request, result, data);
         if (request != FOLDER || result != RESULT_OK || data == null || data.getData() == null) return;
         Uri uri = data.getData();
-        int flags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        int required = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
         try {
-            if ((flags & Intent.FLAG_GRANT_WRITE_URI_PERMISSION) == 0) throw new SecurityException("Folder is read-only.");
-            getContentResolver().takePersistableUriPermission(uri, flags);
+            if ((data.getFlags() & required) != required) throw new SecurityException("Folder needs read and write access.");
+            getContentResolver().takePersistableUriPermission(uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             preferences.edit().putString("folder", uri.toString()).apply();
             JOB.message = "Folder selected. Ready to refresh.";
         } catch (SecurityException e) { JOB.message = "Cannot keep access to this folder. Choose a local, writable collection.media folder."; }
