@@ -1,0 +1,24 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'io.github.maulrin.kikucompanion'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'io.github.maulrin.kikucompanion'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint { abortOnError true }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    // Android supplies org.json on the phone; JVM tests use the real implementation.
+    testImplementation 'org.json:json:20240303'
+}

@@ -1,0 +1,50 @@
+name: Build Android companion
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'apps/android-companion/**'
+      - '.github/workflows/android-companion.yml'
+  pull_request:
+    paths:
+      - 'apps/android-companion/**'
+      - '.github/workflows/android-companion.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-companion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.13'
+          cache-provider: basic
+      - name: Test and build APK
+        working-directory: apps/android-companion
+        run: gradle --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+      - name: Downloadable APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: kiku-companion-debug
+          path: apps/android-companion/app/build/outputs/apk/debug/app-debug.apk
+          archive: false
+          if-no-files-found: error
+          retention-days: 14
