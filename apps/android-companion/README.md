@@ -38,7 +38,7 @@ before publishing if you have made other commits.
    push was skipped, rerun it or push another companion change. Once the workflow
    exists on the default branch, **Run workflow** is available too.
 3. Open **Build Android companion** for your branch. Wait for its green check.
-4. Under **Artifacts**, download **kiku-companion-debug** while signed into GitHub.
+4. Under **Artifacts**, download **app-debug.apk** while signed into GitHub.
    The workflow uploads a single APK directly. If your browser gives you a ZIP,
    extract it and open `app-debug.apk`.
 5. Allow APK installation for that browser/file manager when Android asks.
